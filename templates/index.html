@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie_title }} | Streamline</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="shell">
+        <header class="topbar">
+            <a class="brand" href="{{ url_for('home') }}">
+                <span class="brand-mark">S</span>
+                <span>Streamline</span>
+            </a>
+            <span class="secure-label">AUTHORIZED MEDIA PLAYER</span>
+        </header>
+
+        <section class="hero">
+            <p class="eyebrow">Your private watch desk</p>
+            <h1>Play what you’re<br><em>cleared</em> to watch.</h1>
+            <p class="intro">Paste a direct media URL and Streamline will prepare a clean, responsive player for your browser.</p>
+
+            <form method="POST" id="url-form" class="url-form">
+                <label for="video-url">Media URL</label>
+                <div class="form-row">
+                    <input id="video-url" type="url" name="video_url" placeholder="https://your-domain.com/video.mkv" value="{{ video_url }}" required>
+                    <button type="submit" id="play-button"><span>Load title</span><strong>→</strong></button>
+                </div>
+                <p class="form-note">Direct MP4, WebM, or authorized MKV links are supported.</p>
+            </form>
+        </section>
+
+        {% if error %}
+        <section class="notice error"><strong>Unable to load media</strong><span>{{ error }}</span></section>
+        {% elif video_url %}
+        <section class="player-panel">
+            <div class="player-heading">
+                <div>
+                    <p class="eyebrow">Now preparing</p>
+                    <h2>{{ movie_title }}</h2>
+                </div>
+                <span class="format-pill">{{ media_format }}</span>
+            </div>
+            <div class="video-frame">
+                <video id="video-player" controls playsinline preload="metadata" data-stream-url="{{ stream_url }}">
+                    <source src="{{ stream_url }}">
+                    Your browser does not support video playback.
+                </video>
+                <div class="video-overlay" id="video-overlay">Preparing your stream…</div>
+            </div>
+            <p class="status player-status" id="video-status">Connecting…</p>
+            <p class="source-line">Source: <span>{{ video_url }}</span></p>
+        </section>
+        {% else %}
+        <section class="empty-state">
+            <div class="empty-icon">▶</div>
+            <h2>Your next watch starts here.</h2>
+            <p>Enter a permitted media link above to open the player.</p>
+        </section>
+        {% endif %}
+
+        <footer>Streamline · For media you own or are authorized to stream</footer>
+    </main>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

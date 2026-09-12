@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+video_cache/
+*.part.mp4
+.env
+.DS_Store
+
+# Ignore the accidental nested repository directory.
+streamline/
