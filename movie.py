@@ -343,6 +343,11 @@ def get_movie_title(video_url):
     return " ".join(title.split()).title()
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
+
+
 @app.route("/stream")
 def stream_video():
     source = request.args.get("source", "").strip()
@@ -375,7 +380,7 @@ def stream_video():
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         )
     except FileNotFoundError:
@@ -394,7 +399,6 @@ def stream_video():
             if process.poll() is None:
                 process.kill()
             process.stdout.close()
-            process.stderr.close()
             process.wait()
             transcode_slots.release()
 
@@ -435,6 +439,6 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=5000,
-        debug=True,
+        debug=os.environ.get("FLASK_DEBUG", "0") == "1",
         threaded=True,
     )
